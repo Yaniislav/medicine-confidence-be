@@ -20,6 +20,7 @@
     "babel-eslint": "^10.0.1",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
     "babel-preset-env": "^1.7.0",
+    "bluebird": "^3.7.1",
     "dotenv": "^8.2.0",
     "fastest-validator": "^0.6.12",
     "koa": "^2.5.1",
@@ -30,6 +31,7 @@
     "mongoose": "^5.7.12",
     "path": "^0.12.7",
     "q": "^1.5.1",
+    "redis": "^2.8.0",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
