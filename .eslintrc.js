@@ -8,6 +8,7 @@ module.exports = {
   rules: {
     'global-require': 0,
     'mocha/no-exclusive-tests': 'error',
+    'import/no-dynamic-require': 0,
     'padded-blocks': 0,
     'import/prefer-default-export': 0,
     'no-unused-vars': 1,

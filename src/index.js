@@ -1,10 +1,9 @@
-import Koa from 'koa';
+const Koa = require('koa');
+const initRoutes = require('./routes');
 
 const app = new Koa();
 
-// response
-app.use(ctx => {
-    ctx.body = 'Hello Koa';
-});
+initRoutes(app);
 
-app.listen(3000);
+const PORT = process.env.PORT || 3000;
+app.listen(PORT);
