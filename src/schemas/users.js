@@ -1,5 +1,6 @@
 const { Schema } = require('mongoose');
 const commonFields = require('./commonFields');
+const { saltPassword } = require('../utils/password');
 
 const usersSchema = new Schema({
   email: {
@@ -29,5 +30,11 @@ const usersSchema = new Schema({
   password: String,
   ...commonFields,
 });
+
+usersSchema.methods.checkPassword = function (pass) {
+  if (!pass) return false;
+  if (!this.password) return false; // password hash
+  return saltPassword(this.salt, pass) === this.password;
+};
 
 module.exports = usersSchema;

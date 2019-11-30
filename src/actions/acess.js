@@ -1,26 +1,46 @@
-const keygen = require('keygen');
-const pbkdf2 = require('pbkdf2');
+const jwt = require('jsonwebtoken');
+const passport = require('koa-passport');
+const _ = require('lodash');
 const UserModel = require('../models/users');
+const { hashPassword } = require('../utils/password');
 
-const saltLength = 16;
+const allowedUserData = ['firstName', 'lastName', 'ethAddress', 'role', '_id'];
 
 class AccessAction {
   async register(data) {
-    const userData = { ...data, ...AccessAction.hashPassword(data.password) };
-    const user = new UserModel(userData);
-    await user.save();
-  }
+    const userIncomingData = { ...data, ...hashPassword(data.password) };
+    const user = new UserModel(userIncomingData);
 
-  static hashPassword(password) {
-    const salt = keygen.url(saltLength);
+    await user.save();
+
+    const externalUserData = _.pick(user._doc, allowedUserData);
+    const token = AccessAction.generateToken(externalUserData);
+
     return {
-      salt,
-      password: AccessAction.saltPassword(salt, password),
+      ...externalUserData,
+      token: `JWT ${token}`,
     };
   }
 
-  static saltPassword(salt, password) {
-    return pbkdf2.pbkdf2Sync(password, salt, 10000, 64, 'sha512').toString('base64');
+  login(ctx, next) {
+    return new Promise((resolve, reject) => {
+      passport.authenticate('local', (err, user) => {
+        if (err || !user) {
+          reject(err || 'Login Failed');
+        } else {
+          const externalUserData = _.pick(user, allowedUserData);
+          const token = AccessAction.generateToken(externalUserData);
+          resolve({
+            ...externalUserData,
+            token: `JWT ${token}`,
+          });
+        }
+      })(ctx, next);
+    });
+  }
+
+  static generateToken(data) {
+    return jwt.sign(data, process.env.JWT_SECRET, { expiresIn: '24h' });
   }
 }
 

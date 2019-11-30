@@ -8,9 +8,18 @@ const router = new Router({
 router.post('/register', async (ctx) => {
   try {
     const { body } = ctx.request;
-    await accessAction.register(body);
+    ctx.body = await accessAction.register(body);
   } catch (e) {
     ctx.status = 500;
+    ctx.body = e;
+  }
+});
+
+router.post('/login', async (ctx, next) => {
+  try {
+    ctx.body = await accessAction.login(ctx, next);
+  } catch (e) {
+    ctx.status = 401;
     ctx.body = e;
   }
 });
