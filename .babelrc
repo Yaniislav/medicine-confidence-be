@@ -1,16 +1,15 @@
-{
-  "presets": [
-    [
-      "env", {
-      "targets": {
-        "node": "current"
-      }
-    }
-    ]
+{  
+  "presets": [    
+    ["@babel/preset-env",
+      {         
+        "targets": {          
+          "node": "current"        
+        }     
+      }    
+    ]  
   ],
   "plugins": [
-    ["transform-es2015-modules-commonjs", {
-      "allowTopLevelThis": true
-    }]
+    "@babel/plugin-syntax-class-properties",
+    "@babel/plugin-proposal-class-properties"
   ]
 }
