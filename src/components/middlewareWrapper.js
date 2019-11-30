@@ -44,7 +44,7 @@ class MiddlewareWrapper {
     return [this.singleError(errors)];
   }
 
-  async wrape(req, next, middleware) {
+  async wrap(req, next, middleware) {
     try {
       req.body = await middleware();
       this.headerSet(req);

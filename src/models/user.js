@@ -1,33 +1,30 @@
 import * as _ from 'lodash';
-import crypto from 'crypto';
-import db from '../db';
+import mongoose from 'mongoose';
+import { hashPassword, saltPassword } from '../utils/password';
+import UserSchema from '../db/schemas/user';
 
-const UserModel = db.getModel('user');
+const UserModel = mongoose.model('user', UserSchema);
 export default UserModel;
 
-UserModel.hashPassword = (password) => {
-  const salt = crypto.randomBytes(16).toString('base64');
-  return {
-    salt,
-    password: UserModel.saltPassword(salt, password),
-  };
-};
+UserModel.hashPassword = hashPassword;
 
-UserModel.saltPassword = (salt, password) => crypto.pbkdf2Sync(password, salt, 10000, 64, 'sha1').toString('base64');
+UserModel.saltPassword = saltPassword;
 
 UserModel.create = async (data) => {
   try {
-    const user = new UserModel(data);
+    const userData = { ...data, ...UserModel.hashPassword(data.password) };
+    const user = new UserModel(userData);
 
     await user.save();
+
     return user;
   } catch (err) {
     throw (err);
   }
 };
 
-UserModel.update = async ({ query, data, callback }) => {
-  const user = await UserModel.updateOne(query, { ...data, updatedAt: new Date() }, callback);
+UserModel.update = async (query, data) => {
+  const user = await UserModel.updateOne(query, { ...data, updatedAt: new Date() });
 
   return user;
 };

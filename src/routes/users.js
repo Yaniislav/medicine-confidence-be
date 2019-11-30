@@ -1,17 +1,64 @@
 import koaRouter from 'koa-router';
 import middlewareWrapper from '../components/middlewareWrapper';
-import { userAction } from '../action/user';
+import { userAction } from '../actions/user';
 import { userValidate } from '../validator/user';
+import authorization from '../middlewares/authorization';
 
-export const usersRouter = koaRouter({
+const usersRouter = koaRouter({
   prefix: '/users',
 });
 
+// usersRouter.use(authorization);
+
 usersRouter.get('/', async (ctx, next) => {
-  await middlewareWrapper.wrape(ctx, next, async () => {
-    const reqData = await userValidate.update(ctx.request.body, ctx.request.user);
-    const result = await userAction.update(reqData);
+  await middlewareWrapper.wrap(ctx, next, async () => {
+    const result = await userAction.get();
 
     return result;
   });
 });
+
+usersRouter.post('/', async (ctx, next) => {
+  await middlewareWrapper.wrap(ctx, next, async () => {
+    const data = await userValidate.create(ctx.request.body);
+    const user = await userAction.create(data);
+
+    return user;
+  });
+});
+
+usersRouter.put('/:id', async (ctx, next) => {
+  await middlewareWrapper.wrap(ctx, next, async () => {
+    const data = await userValidate.update(ctx.request.body);
+    const result = await userAction.update(data);
+
+    return result;
+  });
+});
+
+usersRouter.delete('/:id', async (ctx, next) => {
+  await middlewareWrapper.wrap(ctx, next, async () => {
+    const { id } = ctx.params;
+
+    await userValidate.delete(id);
+
+    const result = await userAction.delete();
+
+    return result;
+  });
+});
+
+usersRouter.put('/:id/markAsDeleted', async (ctx, next) => {
+  await middlewareWrapper.wrap(ctx, next, async () => {
+    const { id } = ctx.params;
+
+    await userValidate.delete(id);
+
+    const result = await userAction.markAsDeleted(id);
+
+    return result;
+  });
+});
+
+export default usersRouter;
+module.exports = usersRouter;
