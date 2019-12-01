@@ -5,7 +5,7 @@ import { doctorCategoryValidate } from '../validator/doctorCategory';
 import authorization from '../middlewares/authorization';
 
 const doctorsRouter = koaRouter({
-  prefix: '/DOCTORS',
+  prefix: '/doctorCategories',
 });
 
 // doctorsRouter.use(authorization);

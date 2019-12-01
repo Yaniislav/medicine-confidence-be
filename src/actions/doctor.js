@@ -17,7 +17,7 @@ class DoctorAction {
     return { ...user, ..._.pick(doctor, doctorFreeData) };
   }
 
-  async update(_id, data, filter = doctorFreeData) {
+  async update(_id, data) {
     await userAction.update(data.userId, data);
     await doctorModel.updateOne({ _id }, {
       $set: {
@@ -31,32 +31,10 @@ class DoctorAction {
   }
 
   async findById(_id) {
-    const doctors = await doctorModel.aggregate([{
-      $match: { _id },
-    }, {
-      $lookup: {
-        from: 'users',
-        localField: 'userId',
-        foreignField: '_id',
-        as: 'user',
-      },
-    }, {
-      $unwind: '$user',
-    }, {
-      $project: {
-        _id: 1,
-        userId: 1,
-        doctorCategoryId: 1,
-        email: '$user.email',
-        ethAddress: '$user.ethAddress',
-        firstName: '$user.firstName',
-        lastName: '$user.lastName',
-        createdAt: '$user.createdAt',
-        updatedAt: '$user.updatedAt',
-      },
-    }]);
+    const doctor = await doctorModel.findById(_id);
+    const userData = await userAction.findById(doctor.userId);
 
-    return doctors[0];
+    return { ...userData, ...doctor._doc };
   }
 
   async get(categoryId) {
