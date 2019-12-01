@@ -20,12 +20,11 @@ router.post('/register', async (ctx, next) => {
 });
 
 router.post('/login', async (ctx, next) => {
-  try {
-    ctx.body = await accessAction.login(ctx, next);
-  } catch (e) {
-    ctx.status = 401;
-    ctx.body = e;
-  }
+  await middlewareWrapper.wrap(ctx, next, async () => {
+    const res = await accessAction.login(ctx, next);
+
+    return res;
+  });
 });
 
 module.exports = router;

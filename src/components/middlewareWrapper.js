@@ -50,7 +50,7 @@ class MiddlewareWrapper {
       this.headerSet(req);
     } catch (err) {
       req.body = this.errorBuilder(err);
-      req.status = 400;
+      req.status = err.status || 400;
       this.headerSet(req);
       return;
     }

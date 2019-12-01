@@ -22,8 +22,8 @@ const schemas = {
   create: updateSchema.keys({
     password: Joi.string().required(),
     confirmPassword: Joi.string().valid(Joi.ref('password')).required().options({ language: { any: { allowOnly: 'must match password' } } }),
-  }),
-  update: updateSchema,
+  }).unknown(true),
+  update: updateSchema.unknown(true),
 };
 
 class UserValidate {
@@ -57,17 +57,14 @@ class UserValidate {
     return body;
   }
 
-  async update(body, user, freeData = userFreeData) {
+  async update(body, _id, freeData = userFreeData) {
     let result = null;
 
     try {
       Joi.validate(body, schemas.update);
 
-      const userObj = await userModel.findOne({
-        _id: user._id,
-        isDeleted: false,
-      });
-  
+      const userObj = await userModel.findOne({ _id, isDeleted: false });
+
       if (!userObj) {
         throw ([{ param: 'email', message: 'User not found' }]);
       }

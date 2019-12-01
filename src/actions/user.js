@@ -20,18 +20,24 @@ class UserAction {
     return _.pick(user, userFreeData);
   }
 
-  async update(data, filter = userFreeData) {
-    await userModel.update({ _id: data._id }, { $set: data });
+  async update(_id, data, filter = userFreeData) {
+    await userModel.updateOne({ _id }, { $set: data });
 
-    const user = await userModel.update({ _id: data._id });
+    const user = await userModel.findById(_id, '-password -salt');
 
     return _.pick(user, filter);
   }
 
-  async get() {
-    const users = await userModel.find(null, '-password -salt');
+  async get(filter = null) {
+    const users = await userModel.find(filter, '-password -salt');
 
     return users;
+  }
+
+  async findById(_id, filter = userFreeData) {
+    const user = await userModel.findById(_id);
+
+    return _.pick(user, filter);
   }
 
   async delete(_id) {

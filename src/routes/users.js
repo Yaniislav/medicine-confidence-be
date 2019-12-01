@@ -18,6 +18,15 @@ usersRouter.get('/', async (ctx, next) => {
   });
 });
 
+usersRouter.get('/:id', async (ctx, next) => {
+  await middlewareWrapper.wrap(ctx, next, async () => {
+    const { id } = ctx.params;
+    const result = await userAction.findById(id);
+
+    return result;
+  });
+});
+
 usersRouter.post('/', async (ctx, next) => {
   await middlewareWrapper.wrap(ctx, next, async () => {
     const data = await userValidate.create(ctx.request.body);
@@ -29,8 +38,9 @@ usersRouter.post('/', async (ctx, next) => {
 
 usersRouter.put('/:id', async (ctx, next) => {
   await middlewareWrapper.wrap(ctx, next, async () => {
-    const data = await userValidate.update(ctx.request.body);
-    const result = await userAction.update(data);
+    const { id } = ctx.params;
+    const data = await userValidate.update(ctx.request.body, id);
+    const result = await userAction.update(id, data);
 
     return result;
   });

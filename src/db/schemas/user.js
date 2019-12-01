@@ -9,7 +9,7 @@ const User = new Schema({
   salt: String,
   password: String,
   ethAddress: { type: String, required: true },
-  roles: { type: String, enum: ['admin', 'patient', 'doctor'], default: 'patient' },
+  role: { type: String, enum: ['admin', 'patient', 'doctor'], default: 'patient' },
 });
 
 export default User;

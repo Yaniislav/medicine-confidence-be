@@ -10,8 +10,6 @@ class AccessAction {
   async register(data) {
     const user = await UserModal.create(data);
 
-    console.log(user);
-
     const externalUserData = _.pick(user._doc, allowedUserData);
     const token = AccessAction.generateToken(externalUserData);
 
@@ -25,7 +23,8 @@ class AccessAction {
     return new Promise((resolve, reject) => {
       passport.authenticate('local', (err, user) => {
         if (err || !user) {
-          reject(err || 'Login Failed');
+          const error = err || { message: 'Login Failed', status: 401 };
+          reject(error);
         } else {
           const externalUserData = _.pick(user, allowedUserData);
           const token = AccessAction.generateToken(externalUserData);
