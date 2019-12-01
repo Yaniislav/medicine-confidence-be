@@ -46,11 +46,11 @@ doctorsRouter.put('/:id', async (ctx, next) => {
     const data = ctx.request.body;
     const { id } = ctx.params;
 
-    const userId = await doctorValidate.update(data, id);
+    const userId = await doctorValidate.update(id, data);
 
-    await userValidate.update(data, userId);
+    await userValidate.update(userId, data);
 
-    const result = await doctorAction.update(id, data);
+    const result = await doctorAction.update(id, { ...data, userId });
 
     return result;
   });

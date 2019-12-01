@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import Joi from 'joi';
 import doctorModel from '../models/doctor';
+import doctorCategoryModel from '../models/doctorCategory';
 import handleErrors from './helpers/handleErrors';
 
 const doctorSchema = Joi.object().keys({
@@ -15,6 +16,12 @@ class DoctorValidate {
   async create(body) {
     try {
       await Joi.validate(body, schemas.create);
+
+      const doctorCategory = await doctorCategoryModel.findById(body.doctorCategoryId);
+
+      if (!doctorCategory) {
+        throw ([{ param: 'doctorCategoryId', message: 'Doctor Category not found' }]);
+      }
     } catch (error) {
       handleErrors(error);
     }
@@ -22,7 +29,7 @@ class DoctorValidate {
     return body;
   }
 
-  async update(body, _id) {
+  async update(_id, body) {
     let result = null;
 
     try {

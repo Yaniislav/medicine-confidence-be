@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import mongoose from 'mongoose';
 import DoctorCategorySchema from '../db/schemas/doctorCategory';
 
-const DoctorCategoryModel = mongoose.model('doctorCategory', DoctorCategorySchema);
+const DoctorCategoryModel = mongoose.model('doctorCategory', DoctorCategorySchema, 'doctorCategories');
 export default DoctorCategoryModel;
 
 DoctorCategoryModel.create = async (data) => {

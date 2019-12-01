@@ -4,13 +4,13 @@ import { doctorCategoryAction } from '../actions/doctorCategory';
 import { doctorCategoryValidate } from '../validator/doctorCategory';
 import authorization from '../middlewares/authorization';
 
-const doctorsRouter = koaRouter({
+const doctorCategoriesRouter = koaRouter({
   prefix: '/doctorCategories',
 });
 
-// doctorsRouter.use(authorization);
+// doctorCategoriesRouter.use(authorization);
 
-doctorsRouter.get('/', async (ctx, next) => {
+doctorCategoriesRouter.get('/', async (ctx, next) => {
   await middlewareWrapper.wrap(ctx, next, async () => {
     const result = await doctorCategoryAction.get();
 
@@ -18,19 +18,19 @@ doctorsRouter.get('/', async (ctx, next) => {
   });
 });
 
-doctorsRouter.post('/', async (ctx, next) => {
+doctorCategoriesRouter.post('/', async (ctx, next) => {
   await middlewareWrapper.wrap(ctx, next, async () => {
     const data = ctx.request.body;
 
     await doctorCategoryValidate.create(data);
 
-    const doctor = await doctorCategoryValidate.create(data);
+    const doctorCategory = await doctorCategoryAction.create(data);
 
-    return doctor;
+    return doctorCategory;
   });
 });
 
-doctorsRouter.put('/:id', async (ctx, next) => {
+doctorCategoriesRouter.put('/:id', async (ctx, next) => {
   await middlewareWrapper.wrap(ctx, next, async () => {
     const data = ctx.request.body;
     const { id } = ctx.params;
@@ -43,7 +43,7 @@ doctorsRouter.put('/:id', async (ctx, next) => {
   });
 });
 
-doctorsRouter.delete('/:id', async (ctx, next) => {
+doctorCategoriesRouter.delete('/:id', async (ctx, next) => {
   await middlewareWrapper.wrap(ctx, next, async () => {
     const { id } = ctx.params;
 
@@ -55,5 +55,5 @@ doctorsRouter.delete('/:id', async (ctx, next) => {
   });
 });
 
-export default doctorsRouter;
-module.exports = doctorsRouter;
+export default doctorCategoriesRouter;
+module.exports = doctorCategoriesRouter;

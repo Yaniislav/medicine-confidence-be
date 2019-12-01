@@ -1,4 +1,5 @@
 import * as _ from 'lodash';
+import mongoose from 'mongoose';
 import userModel from '../models/user';
 
 const userFreeData = [
@@ -21,7 +22,7 @@ class UserAction {
   }
 
   async update(_id, data, filter = userFreeData) {
-    await userModel.updateOne({ _id }, { $set: data });
+    await userModel.updateOne({ _id: new mongoose.Types.ObjectId(_id) }, { $set: _.pick(data, userFreeData) });
 
     const user = await userModel.findById(_id, '-password -salt');
 

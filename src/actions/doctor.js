@@ -1,4 +1,5 @@
 import * as _ from 'lodash';
+import mongoose from 'mongoose';
 import doctorModel from '../models/doctor';
 import { userAction } from './user';
 
@@ -7,6 +8,45 @@ const doctorFreeData = [
   'userId',
   '_id',
 ];
+
+const doctorAggregation = ($match = {}) => [{
+  $match,
+}, {
+  $lookup: {
+    from: 'users',
+    localField: 'userId',
+    foreignField: '_id',
+    as: 'user',
+  },
+}, {
+  $lookup: {
+    from: 'doctorCategories',
+    localField: 'doctorCategoryId',
+    foreignField: '_id',
+    as: 'doctorCategory',
+  },
+}, {
+  $project: {
+    _id: 1,
+    userId: 1,
+    doctorCategoryId: 1,
+    user: { $arrayElemAt: ['$user', 0] },
+    doctorCategory: { $arrayElemAt: ['$doctorCategory', 0] },
+  },
+}, {
+  $project: {
+    _id: 1,
+    userId: 1,
+    doctorCategoryId: 1,
+    email: '$user.email',
+    ethAddress: '$user.ethAddress',
+    firstName: '$user.firstName',
+    lastName: '$user.lastName',
+    createdAt: '$user.createdAt',
+    updatedAt: '$user.updatedAt',
+    doctorCategory: '$doctorCategory.title',
+  },
+}];
 
 class DoctorAction {
   async create(data) {
@@ -19,9 +59,9 @@ class DoctorAction {
 
   async update(_id, data) {
     await userAction.update(data.userId, data);
-    await doctorModel.updateOne({ _id }, {
+    await doctorModel.updateOne({ _id: new mongoose.Types.ObjectId(_id) }, {
       $set: {
-        categoryId: data.categoryId,
+        doctorCategoryId: data.doctorCategoryId,
       },
     });
 
@@ -31,37 +71,13 @@ class DoctorAction {
   }
 
   async findById(_id) {
-    const doctor = await doctorModel.findById(_id);
-    const userData = await userAction.findById(doctor.userId);
+    const doctor = await doctorModel.aggregate(doctorAggregation({ _id: new mongoose.Types.ObjectId(_id) }));
 
-    return { ...userData, ...doctor._doc };
+    return doctor[0];
   }
 
   async get(categoryId) {
-    const doctors = await doctorModel.aggregate([{
-      $match: { categoryId },
-    }, {
-      $lookup: {
-        from: 'users',
-        localField: 'userId',
-        foreignField: '_id',
-        as: 'user',
-      },
-    }, {
-      $unwind: '$user',
-    }, {
-      $project: {
-        _id: 1,
-        userId: 1,
-        doctorCategoryId: 1,
-        email: '$user.email',
-        ethAddress: '$user.ethAddress',
-        firstName: '$user.firstName',
-        lastName: '$user.lastName',
-        createdAt: '$user.createdAt',
-        updatedAt: '$user.updatedAt',
-      },
-    }]);
+    const doctors = await doctorModel.aggregate(doctorAggregation({ categoryId }));
 
     return doctors;
   }

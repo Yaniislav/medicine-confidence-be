@@ -1,4 +1,5 @@
 import * as _ from 'lodash';
+import mongoose from 'mongoose';
 import Joi from 'joi';
 import userModel from '../models/user';
 import handleErrors from './helpers/handleErrors';
@@ -57,19 +58,19 @@ class UserValidate {
     return body;
   }
 
-  async update(body, _id, freeData = userFreeData) {
+  async update(_id, body, freeData = userFreeData) {
     let result = null;
 
     try {
       Joi.validate(body, schemas.update);
 
-      const userObj = await userModel.findOne({ _id, isDeleted: false });
+      const userObj = await userModel.findOne({ _id: new mongoose.Types.ObjectId(_id), isDeleted: false });
 
       if (!userObj) {
-        throw ([{ param: 'email', message: 'User not found' }]);
+        throw ([{ param: '_id', message: 'User not found' }]);
       }
 
-      result = _.pick(userObj, freeData);
+      result = _.pick(body, freeData);
     } catch (error) {
       handleErrors(error);
     }

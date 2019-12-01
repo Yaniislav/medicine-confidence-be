@@ -15,6 +15,12 @@ class DoctorCategoryValidate {
   async create(body) {
     try {
       await Joi.validate(body, schemas.create);
+
+      const doctorCategory = await doctorCategoryModel.findOne({ title: body.title });
+  
+      if (doctorCategory) {
+        throw ([{ param: 'title', message: 'Category with this title already exists' }]);
+      }
     } catch (error) {
       handleErrors(error);
     }

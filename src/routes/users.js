@@ -39,7 +39,7 @@ usersRouter.post('/', async (ctx, next) => {
 usersRouter.put('/:id', async (ctx, next) => {
   await middlewareWrapper.wrap(ctx, next, async () => {
     const { id } = ctx.params;
-    const data = await userValidate.update(ctx.request.body, id);
+    const data = await userValidate.update(id, ctx.request.body);
     const result = await userAction.update(id, data);
 
     return result;
