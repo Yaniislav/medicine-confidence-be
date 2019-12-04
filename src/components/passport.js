@@ -1,7 +1,7 @@
 const LocalStrategy = require('passport-local');
 const { Strategy, ExtractJwt } = require('passport-jwt');
 const passport = require('koa-passport');
-const User = require('../models/users');
+const User = require('../models/user');
 
 
 const init = (app) => {

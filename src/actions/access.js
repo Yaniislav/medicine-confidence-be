@@ -1,17 +1,14 @@
-const jwt = require('jsonwebtoken');
-const passport = require('koa-passport');
-const _ = require('lodash');
-const UserModel = require('../models/users');
-const { hashPassword } = require('../utils/password');
+import jwt from 'jsonwebtoken';
+import passport from 'koa-passport';
+import * as _ from 'lodash';
+import UserModal from '../models/user';
+import { hashPassword } from '../utils/password';
 
 const allowedUserData = ['firstName', 'lastName', 'ethAddress', 'role', '_id'];
 
 class AccessAction {
   async register(data) {
-    const userIncomingData = { ...data, ...hashPassword(data.password) };
-    const user = new UserModel(userIncomingData);
-
-    await user.save();
+    const user = await UserModal.create(data);
 
     const externalUserData = _.pick(user._doc, allowedUserData);
     const token = AccessAction.generateToken(externalUserData);
@@ -26,7 +23,8 @@ class AccessAction {
     return new Promise((resolve, reject) => {
       passport.authenticate('local', (err, user) => {
         if (err || !user) {
-          reject(err || 'Login Failed');
+          const error = err || { message: 'Login Failed', status: 401 };
+          reject(error);
         } else {
           const externalUserData = _.pick(user, allowedUserData);
           const token = AccessAction.generateToken(externalUserData);

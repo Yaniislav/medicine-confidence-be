@@ -1,18 +1,24 @@
-const Koa = require('koa');
-const koaBody = require('koa-body');
-const dotenv = require('dotenv');
-const initRoutes = require('./routes');
-const initDB = require('./db');
-const initPassport = require('./components/passport');
+import Koa from 'koa';
+import koaBody from 'koa-body';
+import dotenv from 'dotenv';
+import initRoutes from './routes';
+import initDB from './db';
+import initPassport from './components/passport';
 
-dotenv.config();
-initDB();
+const start = async () => {
+  dotenv.config();
+  await initDB();
+  const app = new Koa();
 
-const app = new Koa();
+  app.use(koaBody());
 
-initPassport(app);
-app.use(koaBody());
-initRoutes(app);
+  initPassport(app);
+  initRoutes(app);
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT);
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT);
+
+  console.log(`Server started on port: ${PORT}`);
+};
+
+start();
