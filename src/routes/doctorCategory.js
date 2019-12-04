@@ -8,7 +8,7 @@ const doctorCategoriesRouter = koaRouter({
   prefix: '/doctorCategories',
 });
 
-// doctorCategoriesRouter.use(authorization);
+doctorCategoriesRouter.use(authorization);
 
 doctorCategoriesRouter.get('/', async (ctx, next) => {
   await middlewareWrapper.wrap(ctx, next, async () => {

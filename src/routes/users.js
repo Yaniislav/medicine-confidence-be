@@ -8,7 +8,7 @@ const usersRouter = koaRouter({
   prefix: '/users',
 });
 
-// usersRouter.use(authorization);
+usersRouter.use(authorization);
 
 usersRouter.get('/', async (ctx, next) => {
   await middlewareWrapper.wrap(ctx, next, async () => {

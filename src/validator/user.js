@@ -12,8 +12,8 @@ const userFreeData = [
   'ethAddress',
 ];
 
-const updateSchema = Joi.object().keys({ 
-  email: Joi.string().email().required(), 
+const updateSchema = Joi.object().keys({
+  email: Joi.string().email().required(),
   firstName: Joi.string().required(),
   lastName: Joi.string().required(),
   ethAddress: Joi.string().required(),
@@ -22,7 +22,7 @@ const updateSchema = Joi.object().keys({
 const schemas = {
   create: updateSchema.keys({
     password: Joi.string().required(),
-    confirmPassword: Joi.string().valid(Joi.ref('password')).required().options({ language: { any: { allowOnly: 'must match password' } } }),
+    // confirmPassword: Joi.string().valid(Joi.ref('password')).required().options({ language: { any: { allowOnly: 'must match password' } } }),
   }).unknown(true),
   update: updateSchema.unknown(true),
 };
@@ -84,7 +84,7 @@ class UserValidate {
         _id,
         isDeleted: false,
       });
-  
+
       if (!user) {
         throw ([{ param: '_id', message: 'User not found' }]);
       }

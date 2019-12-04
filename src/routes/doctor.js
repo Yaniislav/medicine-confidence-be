@@ -9,7 +9,7 @@ const doctorsRouter = koaRouter({
   prefix: '/doctors',
 });
 
-// doctorsRouter.use(authorization);
+doctorsRouter.use(authorization);
 
 doctorsRouter.get('/', async (ctx, next) => {
   await middlewareWrapper.wrap(ctx, next, async () => {

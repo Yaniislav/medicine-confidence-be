@@ -2,15 +2,15 @@ const passport = require('koa-passport');
 
 
 async function authorization(ctx, next) {
-  await passport.authenticate('jwt', (err, user) => {
+  await passport.authenticate('jwt', async (err, user) => {
     if (!user) {
       ctx.status = 401;
     } else {
       ctx.user = user;
-      next();
+      await next();
     }
   })(ctx, next);
 }
 
-module.exports = authorization;
+export default authorization;
 
