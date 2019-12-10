@@ -35,7 +35,7 @@ class NotificationAction {
     await NotificationModel.update({
       recipientAddress,
       _id: { $in: ids },
-    }, { $set: { status: 'sent' } });
+    }, { $set: { status: 'sent', sentAt: Date.now() } });
   }
 
 }
