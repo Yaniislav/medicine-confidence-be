@@ -12,6 +12,8 @@ const userFreeData = [
   'firstName',
   'lastName',
   'ethAddress',
+  'publicKey',
+  'dataPublicKey'
 ];
 
 class UserAction {

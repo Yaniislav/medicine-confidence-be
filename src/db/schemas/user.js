@@ -13,6 +13,8 @@ const User = new Schema({
   password: String,
   ethAddress: { type: String, required: true },
   role: { type: String, enum: ['admin', 'patient', 'doctor'], default: 'patient' },
+  publicKey: String,
+  dataPublicKey: String
 });
 
 User.methods.checkPassword = function (pass) {

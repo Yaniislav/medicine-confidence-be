@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import UserModal from '../models/user';
 import { hashPassword } from '../utils/password';
 
-const allowedUserData = ['firstName', 'lastName', 'ethAddress', 'role', '_id'];
+const allowedUserData = ['firstName', 'lastName', 'ethAddress', 'role', '_id', 'email', 'publicKey', 'dataPublicKey'];
 
 class AccessAction {
   async register(data) {
