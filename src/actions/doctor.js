@@ -45,6 +45,7 @@ const doctorAggregation = ($match = {}) => [{
     createdAt: '$user.createdAt',
     updatedAt: '$user.updatedAt',
     doctorCategory: '$doctorCategory.title',
+    publicKey: '$user.publicKey',
   },
 }];
 
