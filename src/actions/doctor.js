@@ -42,6 +42,7 @@ const doctorAggregation = ($match = {}) => [{
     ethAddress: '$user.ethAddress',
     firstName: '$user.firstName',
     lastName: '$user.lastName',
+    role: '$user.role',
     createdAt: '$user.createdAt',
     updatedAt: '$user.updatedAt',
     doctorCategory: '$doctorCategory.title',
