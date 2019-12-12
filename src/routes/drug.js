@@ -21,7 +21,7 @@ drugRouter.get('/:id', async (ctx, next) => {
     if (!result) {
       throw {
         message: 'Not found',
-        param: ctx.params.id,
+        param: '_id',
         status: 404,
       };
     } else {

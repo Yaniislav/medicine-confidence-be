@@ -6,13 +6,14 @@ class DrugAction {
     return drugs;
   }
 
-  async getById(id) {
-    const drug = await DrugModel.findOne({ _id: id, isDeleted: false });
+  async getById(_id) {
+    const drug = await DrugModel.findOne({ _id });
     return drug;
   }
 
-  async update(id, update) {
-    await DrugModel.findOneAndUpdate({ _id: id }, update);
+  async update(_id, update) {
+    const changedDrug = await DrugModel.findOneAndUpdate({ _id }, update, { new: true });
+    return changedDrug;
   }
 
   async create(data) {
@@ -20,8 +21,8 @@ class DrugAction {
     return drug;
   }
 
-  async delete(id) {
-    await DrugModel.findOneAndUpdate({ _id: id }, { isDeleted: true });
+  async delete(_id) {
+    await DrugModel.updateOne({ _id }, { isDeleted: true });
   }
 }
 
