@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import initRoutes from './routes';
 import initDB from './db';
 import initPassport from './components/passport';
+import contractsListener from './components/ethereum';
 
 const start = async () => {
   dotenv.config();
@@ -14,6 +15,8 @@ const start = async () => {
 
   initPassport(app);
   initRoutes(app);
+
+  contractsListener.startListening();
 
   const PORT = process.env.PORT || 3000;
   app.listen(PORT);
