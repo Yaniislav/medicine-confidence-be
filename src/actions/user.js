@@ -13,7 +13,7 @@ const userFreeData = [
   'lastName',
   'ethAddress',
   'publicKey',
-  'dataPublicKey'
+  'dataPublicKey',
 ];
 
 class UserAction {
@@ -39,6 +39,12 @@ class UserAction {
 
   async findById(_id, filter = userFreeData) {
     const user = await userModel.findById(_id);
+
+    return _.pick(user, filter);
+  }
+
+  async findByEthAddress(ethAddress, filter = userFreeData) {
+    const user = await userModel.findByEthAddress(ethAddress);
 
     return _.pick(user, filter);
   }

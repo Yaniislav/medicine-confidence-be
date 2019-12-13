@@ -8,6 +8,11 @@ export const eventNames = {
   ENTRY_ADDED: 'entry_added',
 };
 
+export const paymentEventTypes = {
+  userPaidForArrengement: 0,
+  paymentSuccess: 1,
+};
+
 let listeners = [];
 let listeningStarted = false;
 
@@ -45,7 +50,7 @@ class ContractsListener {
       type: returnValues.eventType,
       doctorEthAddress: returnValues.doctor,
       patientEthAddress: returnValues.patient,
-      payload: {},
+      payload: '',
     };
     this.spreadAmongListeners(normilizedEvent);
   }
@@ -56,7 +61,7 @@ class ContractsListener {
       type: 0,
       doctorEthAddress: returnValues.doctor,
       patientEthAddress: returnValues.patient,
-      payload: returnValues.entry,
+      payload: JSON.stringify(returnValues.entry),
     };
     this.spreadAmongListeners(normilizedEvent);
   }
@@ -67,13 +72,12 @@ class ContractsListener {
       type: 0,
       doctorEthAddress: returnValues.doctor,
       patientEthAddress: returnValues.patient,
-      payload: returnValues.entry,
+      payload: JSON.stringify(returnValues.entry),
     };
     this.spreadAmongListeners(normilizedEvent);
   }
 
   spreadAmongListeners = (event) => {
-    console.log('event', event);
     listeners.forEach(listener => listener(event));
   }
 

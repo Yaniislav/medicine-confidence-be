@@ -7,6 +7,10 @@ const Notification = new Schema({
   sentAt: { type: Date },
   status: { type: String, default: 'pending', enum: ['pending', 'sent'] },
   recipientAddress: { type: String, required: true },
+  sourceAddress: { type: String },
+  eventName: { type: String },
+  eventType: { type: Number },
+  eventPayload: { type: String },
 });
 
 export default Notification;

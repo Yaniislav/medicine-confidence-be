@@ -49,6 +49,14 @@ UserModel.findByEmail = async (email) => {
   }
 };
 
+UserModel.findByEthAddress = async (ethAddress) => {
+  try {
+    return await UserModel.findOne({ ethAddress });
+  } catch (err) {
+    throw (err);
+  }
+};
+
 UserModel.markAsDeleted = async (ids) => {
   try {
     return await UserModel.update({ _id: { $in: ids } }, { isDeleted: true });
