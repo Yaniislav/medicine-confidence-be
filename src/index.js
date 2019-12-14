@@ -6,6 +6,7 @@ import initDB from './db';
 import initPassport from './components/passport';
 import contractsListener from './components/ethereum';
 import contractsEventHandler from './components/contractEventHandler';
+import socket from './components/socket';
 
 const start = async () => {
   dotenv.config();
@@ -22,6 +23,10 @@ const start = async () => {
 
   const PORT = process.env.PORT || 3000;
   app.listen(PORT);
+  
+  const SOCKET_PORT = process.env.SOCKET_PORT || 3005;
+
+  socket.listen(SOCKET_PORT);
 
   console.log(`Server started on port: ${PORT}`);
 };
