@@ -1,6 +1,17 @@
 import NotificationModel from '../models/notification';
+import socket from '../components/socket';
 
 class NotificationAction {
+  constructor() {
+    socket.onUserConnect(async (recipientAddress) => {
+      const pendingNotifications = await this.getPending(recipientAddress);
+
+      socket.sendToUser('notification', recipientAddress, pendingNotifications);
+
+      await this.markAsSent(recipientAddress, pendingNotifications.map(({ _id }) => _id));
+    });
+  }
+
   async create(data) {
     const notification = await NotificationModel.create(data);
 
