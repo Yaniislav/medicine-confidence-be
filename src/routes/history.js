@@ -1,29 +1,41 @@
 import koaRouter from 'koa-router';
 import middlewareWrapper from '../components/middlewareWrapper';
 import authorization from '../middlewares/authorization';
-import hasRole from '../middlewares/hasRole';
 import { historyAction } from '../actions/history';
 
 const historyRouter = koaRouter({ prefix: '/histories' });
 historyRouter.use(authorization);
 
-historyRouter.post('/', hasRole('doctor'), async (ctx, next) => {
+historyRouter.post('/', async (ctx, next) => {
   await middlewareWrapper.wrap(ctx, next, async () => {
-    const data = ctx.request.body;
-    const result = await historyAction.create(data);
+    try {
+      const data = ctx.request.body;
+      const result = await historyAction.create(data);
+      return result;
+    } catch (e) {
+      if (e.code && e.code === 11000) {
+        throw { message: 'This record already exists, you should use update' };
+      }
+    }
+  });
+});
+
+historyRouter.get('/:patientId/:doctorId', async (ctx, next) => {
+  await middlewareWrapper.wrap(ctx, next, async () => {
+    const { patientId, doctorId } = ctx.params;
+    const result = await historyAction.get(patientId, doctorId);
     return result;
   });
 });
 
-historyRouter.get('/:patientId', async (ctx, next) => {
+historyRouter.put('/:patientId/:doctorId', async (ctx, next) => {
   await middlewareWrapper.wrap(ctx, next, async () => {
 
-    const { patientId } = ctx.params;
-    const { limit, page } = ctx.query;
-    const result = await historyAction.getPatientHistory(patientId, limit, page);
+    const { patientId, doctorId } = ctx.params;
+    const { encryptedData } = ctx.request.body;
+    const result = await historyAction.update(patientId, doctorId, { encryptedData });
     return result;
   });
 });
 
-export default historyRouter;
 module.exports = historyRouter;

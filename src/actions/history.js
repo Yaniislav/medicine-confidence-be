@@ -1,34 +1,22 @@
 import HistoryModel from '../models/history';
-import { convertToNumber } from '../utils/convertToNumber';
-
-const defaultLimit = 10;
-const maxLimit = 100;
-const defaultPage = 1;
 
 class HistoryAction {
-  async getPatientHistory(patientId, limitString, pageString) {
-    const count = await HistoryModel.count({ patientId });
-    const page = convertToNumber(pageString) || defaultPage;
-    let limit = convertToNumber(limitString) || defaultLimit;
-    if (limit > maxLimit) limit = maxLimit;
-    let history = [];
-    if (count) {
-      history = await HistoryModel
-        .find({ patientId })
-        .skip((limit * page) - limit)
-        .limit(limit);
-    }
-
-    return {
-      data: history,
-      count,
-      limit,
-      page,
-    };
+  async get(patientId, doctorId) {
+    const history = await HistoryModel
+      .findOne({
+        patientId,
+        doctorId,
+      });
+    return history;
   }
 
   async create(data) {
     const history = await HistoryModel.create(data);
+    return history;
+  }
+
+  async update(patientId, doctorId, update) {
+    const history = await HistoryModel.findOneAndUpdate({ patientId, doctorId }, update, { new: true });
     return history;
   }
 }

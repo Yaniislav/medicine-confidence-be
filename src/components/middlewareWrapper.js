@@ -24,10 +24,8 @@ class MiddlewareWrapper {
 
   singleError(error) {
     if (error instanceof Error) {
-      console.log(error);
       return { message: 'Internal server error occurred' };
-    } else if (!(error.message && error.param)) {
-      console.log(error);
+    } else if (!(error.message || error.param)) {
       return { message: 'Unknown server error occurred' };
     }
 
