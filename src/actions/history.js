@@ -16,7 +16,13 @@ class HistoryAction {
   }
 
   async update(patientId, doctorId, update) {
-    const history = await HistoryModel.findOneAndUpdate({ patientId, doctorId }, update, { new: true });
+    const history = await HistoryModel.findOneAndUpdate({
+      patientId,
+      doctorId,
+    }, {
+      ...update,
+      updatedAt: Date.now(),
+    }, { new: true });
     return history;
   }
 }

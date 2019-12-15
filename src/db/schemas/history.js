@@ -5,6 +5,7 @@ const HistorySchema = new Schema({
   doctorId: { type: Schema.Types.ObjectId, required: true },
   encryptedData: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
 }, { autoIndex: false });
 
 
