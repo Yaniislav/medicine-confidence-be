@@ -4,17 +4,18 @@ import socket from '../components/socket';
 class NotificationAction {
   constructor() {
     socket.onUserConnect(async (recipientAddress) => {
-      const pendingNotifications = await this.getPending(recipientAddress);
+      const notifications = await this.getAll(recipientAddress);
 
-      socket.sendToUser('notification', recipientAddress, pendingNotifications);
+      socket.sendToUser('notifications', recipientAddress, notifications);
 
-      await this.markAsSent(recipientAddress, pendingNotifications.map(({ _id }) => _id));
     });
   }
 
   async create(data) {
     const notification = await NotificationModel.create(data);
-
+    if (socket.isOnline(notification.recipientAddress)) {
+      socket.sendToUser('notification', notification.recipientAddress, notification);
+    }
     return notification;
   }
 

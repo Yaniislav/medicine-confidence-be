@@ -11,6 +11,8 @@ const Notification = new Schema({
   eventName: { type: String },
   eventType: { type: Number },
   eventPayload: { type: String },
+  senderId: { type: Schema.Types.ObjectId },
+  actionStatus: { type: String, default: 'none', enum: ['none', 'complete'] },
 });
 
 export default Notification;

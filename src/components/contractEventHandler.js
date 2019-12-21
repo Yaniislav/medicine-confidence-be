@@ -1,6 +1,5 @@
 import { notificationAction } from '../actions/notification';
 import { userAction } from '../actions/user';
-
 import { eventNames, paymentEventTypes } from './ethereum';
 
 const listen = async (event) => {
@@ -13,6 +12,7 @@ const listen = async (event) => {
     eventName: event.name,
     eventType: event.type,
     eventPayload: event.payload,
+    senderId: '',
   };
 
   const patient = await userAction.findByEthAddress(event.patientEthAddress);
@@ -20,11 +20,15 @@ const listen = async (event) => {
 
   if (patient && doctor) {
     if (event.name === eventNames.PAYMENT) {
+      notification.recipientAddress = doctor.ethAddress;
+      notification.senderId = patient._id;
+      notification.sourceAddress = patient.ethAddress;
       if (event.eventType === paymentEventTypes.userPaidForArrengement) {
         notification.title = 'Patient paid for arrangement';
         notification.message = `Patient ${patient.firstName} ${patient.lastName} paid for arrengement`;
-        notification.recipientAddress = doctor.ethAddress;
-        notification.sourceAddress = patient.ethAddress;
+      } else if (event.eventType === paymentEventTypes.arrangementCanceled) {
+        notification.title = 'Patient cancelled arrangement';
+        notification.message = `Patient ${patient.firstName} ${patient.lastName} cancelled arrengement`;
       } else return;
 
     } else if (event.name === eventNames.REQUEST_WRITE) {
@@ -32,14 +36,17 @@ const listen = async (event) => {
       notification.message = `Doctor ${doctor.firstName} ${doctor.lastName} tries to add entry to you history`;
       notification.recipientAddress = patient.ethAddress;
       notification.sourceAddress = doctor.ethAddress;
+      notification.senderId = doctor._id;
     } else if (event.name === eventNames.ENTRY_ADDED) {
       notification.title = 'New entry added';
       notification.message = `Doctor ${doctor.firstName} ${doctor.lastName} has added entry to you history`;
       notification.recipientAddress = patient.ethAddress;
       notification.sourceAddress = doctor.ethAddress;
+      notification.senderId = doctor._id;
     } else return;
 
     notificationAction.create(notification);
+
   }
 };
 

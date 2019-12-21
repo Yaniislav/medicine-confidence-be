@@ -14,8 +14,8 @@ const onConnect = (socket) => {
     usersSessions.delete(userId);
   };
 
-  socket.on('setUserId', (jsonData) => {
-    const data = JSON.parse(jsonData);
+  socket.on('setUserId', (data) => {
+    console.log('New user connected', data);
 
     sessions.set(socketId, data.userId);
     usersSessions.set(data.userId, socketId);

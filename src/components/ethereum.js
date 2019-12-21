@@ -11,6 +11,7 @@ export const eventNames = {
 export const paymentEventTypes = {
   userPaidForArrengement: 0,
   paymentSuccess: 1,
+  arrangementCanceled: 5,
 };
 
 let listeners = [];
