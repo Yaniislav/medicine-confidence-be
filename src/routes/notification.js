@@ -5,7 +5,7 @@ import { notificationAction } from '../actions/notification';
 
 const notificationsRouter = koaRouter({ prefix: '/notifications' });
 
-notificationsRouter.use(authorization);
+// notificationsRouter.use(authorization);
 
 notificationsRouter.get('/:ethAddress', async (ctx, next) => {
   await middlewareWrapper.wrap(ctx, next, async () => {

@@ -48,7 +48,7 @@ class ContractsListener {
   handlePaymentEvent = ({ returnValues }) => {
     const normilizedEvent = {
       name: eventNames.PAYMENT,
-      type: returnValues.eventType,
+      type: parseInt(returnValues.eventType),
       doctorEthAddress: returnValues.doctor,
       patientEthAddress: returnValues.patient,
       payload: '',

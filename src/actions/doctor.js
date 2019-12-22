@@ -7,6 +7,7 @@ const doctorFreeData = [
   'doctorCategoryId',
   'userId',
   '_id',
+  'price',
 ];
 
 const doctorAggregation = ($match = {}) => [{
@@ -32,6 +33,7 @@ const doctorAggregation = ($match = {}) => [{
     doctorCategoryId: 1,
     user: { $arrayElemAt: ['$user', 0] },
     doctorCategory: { $arrayElemAt: ['$doctorCategory', 0] },
+    price: 1,
   },
 }, {
   $project: {
@@ -47,6 +49,7 @@ const doctorAggregation = ($match = {}) => [{
     updatedAt: '$user.updatedAt',
     doctorCategory: '$doctorCategory.title',
     publicKey: '$user.publicKey',
+    price: 1,
   },
 }];
 
@@ -80,7 +83,6 @@ class DoctorAction {
 
   async get(categoryId) {
     const doctors = await doctorModel.aggregate(doctorAggregation({ categoryId }));
-
     return doctors;
   }
 

@@ -9,6 +9,7 @@ const onConnect = (socket) => {
 
   const disconnect = () => {
     const userId = sessions.get(socketId);
+    console.log('User disconnected ', userId);
 
     sessions.delete(socketId);
     usersSessions.delete(userId);

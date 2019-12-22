@@ -4,7 +4,7 @@ import authorization from '../middlewares/authorization';
 import { historyAction } from '../actions/history';
 
 const historyRouter = koaRouter({ prefix: '/histories' });
-historyRouter.use(authorization);
+// historyRouter.use(authorization);
 
 historyRouter.post('/', async (ctx, next) => {
   await middlewareWrapper.wrap(ctx, next, async () => {
@@ -32,8 +32,8 @@ historyRouter.put('/:patientId/:doctorId', async (ctx, next) => {
   await middlewareWrapper.wrap(ctx, next, async () => {
 
     const { patientId, doctorId } = ctx.params;
-    const { encryptedData } = ctx.request.body;
-    const result = await historyAction.update(patientId, doctorId, { encryptedData });
+    const { encryptedData, dataLength } = ctx.request.body;
+    const result = await historyAction.update(patientId, doctorId, { encryptedData, dataLength });
     return result;
   });
 });
