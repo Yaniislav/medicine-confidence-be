@@ -14,14 +14,14 @@ const onConnect = (socket) => {
     usersSessions.delete(userId);
   };
 
-  socket.on('setUserId', (data) => {
-    console.log('New user connected', data);
+  socket.on('setUserId', (ethAddress) => {
+    console.log('New user connected', ethAddress);
 
-    sessions.set(socketId, data.userId);
-    usersSessions.set(data.userId, socketId);
+    sessions.set(socketId, ethAddress);
+    usersSessions.set(ethAddress, socketId);
 
     onConnectListeners.forEach((listener) => {
-      listener(data.userId);
+      listener(ethAddress);
     });
   });
 

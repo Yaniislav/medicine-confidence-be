@@ -42,5 +42,21 @@ notificationsRouter.put('/markRead', async (ctx, next) => {
   });
 });
 
+notificationsRouter.put('/markActionAsComplete', async (ctx, next) => {
+  await middlewareWrapper.wrap(ctx, next, async () => {
+    const { body: { notificationId } } = ctx.request;
+    const result = await notificationAction.markActionAsComplete(notificationId);
+    return result;
+  });
+});
+
+notificationsRouter.put('/sendReadRequest', async (ctx, next) => {
+  await middlewareWrapper.wrap(ctx, next, async () => {
+    const { body: { sourceId, recipientId } } = ctx.request;
+    const result = await notificationAction.createReadRequestNotification(sourceId, recipientId);
+    return result;
+  });
+});
+
 export default notificationsRouter;
 module.exports = notificationsRouter;

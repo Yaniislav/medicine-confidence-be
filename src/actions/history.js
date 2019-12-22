@@ -1,4 +1,5 @@
 import HistoryModel from '../models/history';
+import { notificationAction } from './notification';
 
 class HistoryAction {
   async get(patientId, doctorId) {
@@ -12,6 +13,7 @@ class HistoryAction {
 
   async create(data) {
     const history = await HistoryModel.create(data);
+    await notificationAction.createRequestReadAllowedNotification(data.patientId, data.doctorId);
     return history;
   }
 
@@ -23,6 +25,7 @@ class HistoryAction {
       ...update,
       updatedAt: Date.now(),
     }, { new: true });
+    await notificationAction.createRequestReadAllowedNotification(patientId, doctorId);
     return history;
   }
 }

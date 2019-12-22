@@ -1,5 +1,6 @@
 import Koa from 'koa';
 import koaBody from 'koa-body';
+import cors from 'koa2-cors';
 import dotenv from 'dotenv';
 import initRoutes from './routes';
 import initDB from './db';
@@ -13,6 +14,7 @@ const start = async () => {
   await initDB();
   const app = new Koa();
 
+  app.use(cors());
   app.use(koaBody());
 
   initPassport(app);
@@ -23,7 +25,7 @@ const start = async () => {
 
   const PORT = process.env.PORT || 3000;
   app.listen(PORT);
-  
+
   const SOCKET_PORT = process.env.SOCKET_PORT || 3005;
 
   socket.listen(SOCKET_PORT);
