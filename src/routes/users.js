@@ -58,6 +58,16 @@ usersRouter.delete('/:id', async (ctx, next) => {
   });
 });
 
+usersRouter.get('/getByEthAddresses/:address', async (ctx, next) => {
+  await middlewareWrapper.wrap(ctx, next, async () => {
+    const { address } = ctx.params;
+
+    const result = await userAction.findByEthAddress(address);
+
+    return result;
+  });
+});
+
 usersRouter.put('/:id/markAsDeleted', async (ctx, next) => {
   await middlewareWrapper.wrap(ctx, next, async () => {
     const { id } = ctx.params;

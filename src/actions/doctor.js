@@ -78,6 +78,11 @@ class DoctorAction {
   async findById(_id) {
     const doctor = await doctorModel.aggregate(doctorAggregation({ _id: new mongoose.Types.ObjectId(_id) }));
 
+    if (!doctor[0]) {
+      const doctorsByUserId = await doctorModel.aggregate(doctorAggregation({ userId: new mongoose.Types.ObjectId(_id) }));
+      return doctorsByUserId[0];
+    }
+
     return doctor[0];
   }
 
