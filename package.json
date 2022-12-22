@@ -21,7 +21,7 @@
     "dotenv": "^8.2.0",
     "fastest-validator": "^0.6.12",
     "joi": "^14.3.1",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "keygen": "^0.3.1",
     "koa": "^2.5.1",
     "koa-body": "^2.5.0",
